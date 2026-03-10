@@ -1,4 +1,4 @@
-# Upright
+# BBotTuneHUD
 
 iPhone companion app for the balance_bot self-balancing robot. Streams live telemetry, tunes PID gains in real time, visualizes IMU orientation in 3D, and provides full arm/disarm control — all over WebSocket.
 
@@ -32,7 +32,7 @@ iPhone companion app for the balance_bot self-balancing robot. Streams live tele
 
 ```
 ┌─────────────────────────────────────────────────┐
-│                   Upright (SwiftUI)              │
+│                   BBotTuneHUD (SwiftUI)              │
 │                                                 │
 │  ContentView (TabView)                          │
 │  ├── ControlView       — arm, mode, video feed  │
@@ -128,7 +128,7 @@ A **Zero display** button captures the current resting angles as trim offsets, s
 ### Project Structure
 
 ```
-Upright/
+BBotTuneHUD/
 ├── Models/
 │   ├── RobotState.swift
 │   └── PIDConfig.swift
@@ -149,7 +149,7 @@ Upright/
 
 ### Building
 
-1. Clone the repo and open `Upright.xcodeproj` in Xcode
+1. Clone the repo and open `BBotTuneHUD.xcodeproj` in Xcode
 2. Set your development team in project settings
 3. Build and run on device (`⌘R`)
 

@@ -7,19 +7,38 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		596B5E552F48F6F4002C5D62 /* CatFollowerApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CatFollowerApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		590BDC2A2F60A2B400836618 /* BBotTuneHUD.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BBotTuneHUD.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		59D6231F2F60A3BB00E70D6F /* Exceptions for "BBotTuneHUD" folder in "BBotTuneHUD" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				ContentView.swift,
+				Info.plist,
+			);
+			target = 590BDC292F60A2B400836618 /* BBotTuneHUD */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		596B5E572F48F6F4002C5D62 /* CatFollowerApp */ = {
+		590BDC2B2F60A2B400836618 /* BBotTuneHUD */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = CatFollowerApp;
+			exceptions = (
+				59D6231F2F60A3BB00E70D6F /* Exceptions for "BBotTuneHUD" folder in "BBotTuneHUD" target */,
+			);
+			path = BBotTuneHUD;
+			sourceTree = "<group>";
+		};
+		596B5E572F48F6F4002C5D62 /* BBotTuneHUD */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = BBotTuneHUD;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		596B5E522F48F6F3002C5D62 /* Frameworks */ = {
+		590BDC272F60A2B400836618 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -32,7 +51,8 @@
 		596B5E4C2F48F6F3002C5D62 = {
 			isa = PBXGroup;
 			children = (
-				596B5E572F48F6F4002C5D62 /* CatFollowerApp */,
+				596B5E572F48F6F4002C5D62 /* BBotTuneHUD */,
+				590BDC2B2F60A2B400836618 /* BBotTuneHUD */,
 				596B5E562F48F6F4002C5D62 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -40,7 +60,7 @@
 		596B5E562F48F6F4002C5D62 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				596B5E552F48F6F4002C5D62 /* CatFollowerApp.app */,
+				590BDC2A2F60A2B400836618 /* BBotTuneHUD.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -48,26 +68,26 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		596B5E542F48F6F3002C5D62 /* CatFollowerApp */ = {
+		590BDC292F60A2B400836618 /* BBotTuneHUD */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 596B5E602F48F6F6002C5D62 /* Build configuration list for PBXNativeTarget "CatFollowerApp" */;
+			buildConfigurationList = 590BDC322F60A2B600836618 /* Build configuration list for PBXNativeTarget "BBotTuneHUD" */;
 			buildPhases = (
-				596B5E512F48F6F3002C5D62 /* Sources */,
-				596B5E522F48F6F3002C5D62 /* Frameworks */,
-				596B5E532F48F6F3002C5D62 /* Resources */,
+				590BDC262F60A2B400836618 /* Sources */,
+				590BDC272F60A2B400836618 /* Frameworks */,
+				590BDC282F60A2B400836618 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				596B5E572F48F6F4002C5D62 /* CatFollowerApp */,
+				590BDC2B2F60A2B400836618 /* BBotTuneHUD */,
 			);
-			name = CatFollowerApp;
+			name = BBotTuneHUD;
 			packageProductDependencies = (
 			);
-			productName = CatFollowerApp;
-			productReference = 596B5E552F48F6F4002C5D62 /* CatFollowerApp.app */;
+			productName = BBotTuneHUD;
+			productReference = 590BDC2A2F60A2B400836618 /* BBotTuneHUD.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -80,12 +100,12 @@
 				LastSwiftUpdateCheck = 2620;
 				LastUpgradeCheck = 2620;
 				TargetAttributes = {
-					596B5E542F48F6F3002C5D62 = {
+					590BDC292F60A2B400836618 = {
 						CreatedOnToolsVersion = 26.2;
 					};
 				};
 			};
-			buildConfigurationList = 596B5E502F48F6F3002C5D62 /* Build configuration list for PBXProject "CatFollowerApp" */;
+			buildConfigurationList = 596B5E502F48F6F3002C5D62 /* Build configuration list for PBXProject "BBotTuneHUD" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -99,13 +119,13 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				596B5E542F48F6F3002C5D62 /* CatFollowerApp */,
+				590BDC292F60A2B400836618 /* BBotTuneHUD */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		596B5E532F48F6F3002C5D62 /* Resources */ = {
+		590BDC282F60A2B400836618 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -115,7 +135,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		596B5E512F48F6F3002C5D62 /* Sources */ = {
+		590BDC262F60A2B400836618 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -125,6 +145,70 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		590BDC332F60A2B600836618 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = TH3ACB9272;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ryan.BBotTuneHUD;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		590BDC342F60A2B600836618 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = TH3ACB9272;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ryan.BBotTuneHUD;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		596B5E5E2F48F6F6002C5D62 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -246,87 +330,23 @@
 			};
 			name = Release;
 		};
-		596B5E612F48F6F6002C5D62 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = TH3ACB9272;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ryan.CatFollowerApp;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		596B5E622F48F6F6002C5D62 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = TH3ACB9272;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ryan.CatFollowerApp;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		596B5E502F48F6F3002C5D62 /* Build configuration list for PBXProject "CatFollowerApp" */ = {
+		590BDC322F60A2B600836618 /* Build configuration list for PBXNativeTarget "BBotTuneHUD" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				596B5E5E2F48F6F6002C5D62 /* Debug */,
-				596B5E5F2F48F6F6002C5D62 /* Release */,
+				590BDC332F60A2B600836618 /* Debug */,
+				590BDC342F60A2B600836618 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		596B5E602F48F6F6002C5D62 /* Build configuration list for PBXNativeTarget "CatFollowerApp" */ = {
+		596B5E502F48F6F3002C5D62 /* Build configuration list for PBXProject "BBotTuneHUD" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				596B5E612F48F6F6002C5D62 /* Debug */,
-				596B5E622F48F6F6002C5D62 /* Release */,
+				596B5E5E2F48F6F6002C5D62 /* Debug */,
+				596B5E5F2F48F6F6002C5D62 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

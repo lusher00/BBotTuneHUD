@@ -1,14 +1,14 @@
 //
-//  CatFollowerAppApp.swift
-//  CatFollowerApp
+//  BBotTuneHUDApp.swift
+//  BBotTuneHUD
 //
-//  Created by rlush on 2/20/26.
+//  Created by rlush on 3/10/26.
 //
 
 import SwiftUI
 
 @main
-struct CatFollowerAppApp: App {
+struct BBotTuneHUDApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()

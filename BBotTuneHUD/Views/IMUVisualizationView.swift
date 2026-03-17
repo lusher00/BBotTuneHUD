@@ -3,13 +3,12 @@ import SceneKit
 
 // ============================================================
 // IMU Display Configuration
-// Simple per-axis offsets (radians) to trim the visual so the
-// cube sits level when the robot is balanced. No quaternion math.
+// Per-axis trim offsets in DEGREES. Applied before rendering.
 // ============================================================
 struct IMUDisplayConfig {
-    var pitchOffset: Float = 0.0   // theta trim
-    var rollOffset:  Float = 0.0   // phi trim
-    var yawOffset:   Float = 0.0   // psi trim
+    var pitchOffset: Float = 0.0   // theta trim (degrees)
+    var rollOffset:  Float = 0.0   // phi trim   (degrees)
+    var yawOffset:   Float = 0.0   // psi trim   (degrees)
     var smoothing:   Float = 0.2   // slerp factor (0=frozen, 1=instant)
 }
 
@@ -104,23 +103,9 @@ struct OrientationControlsView: View {
             Text("Trim offsets added to each angle before rendering.")
                 .font(.caption).foregroundColor(.secondary)
 
-            OffsetSlider(label: "Pitch offset (°)",
-                         value: Binding(
-                            get: { config.pitchOffset * 180 / .pi },
-                            set: { config.pitchOffset = $0 * .pi / 180 }),
-                         range: -45...45)
-
-            OffsetSlider(label: "Roll offset (°)",
-                         value: Binding(
-                            get: { config.rollOffset * 180 / .pi },
-                            set: { config.rollOffset = $0 * .pi / 180 }),
-                         range: -45...45)
-
-            OffsetSlider(label: "Yaw offset (°)",
-                         value: Binding(
-                            get: { config.yawOffset * 180 / .pi },
-                            set: { config.yawOffset = $0 * .pi / 180 }),
-                         range: -180...180)
+            OffsetSlider(label: "Pitch offset (°)", value: $config.pitchOffset, range: -45...45)
+            OffsetSlider(label: "Roll offset (°)",  value: $config.rollOffset,  range: -45...45)
+            OffsetSlider(label: "Yaw offset (°)",   value: $config.yawOffset,   range: -180...180)
 
             Divider()
 
@@ -177,17 +162,22 @@ struct CubeSceneView: UIViewRepresentable {
         guard let node = context.coordinator.cubeNode else { return }
 
         // ── Drive cube from the same angles the PID uses ────────────────
+        // IMU sends degrees; add degree offsets, then convert to radians
+        // for SceneKit which expects radians in simd_quatf(angle:).
+        //
         // Robot frame → SceneKit axes:
         //   theta (pitch, forward/back lean) → rotate about X
         //   phi   (roll,  side lean)         → rotate about Z
         //   psi   (yaw,   turning)           → rotate about Y
-        //
-        // Add user trim offsets so the cube can be nulled at rest.
-        let pitch = imu.theta + config.pitchOffset
-        let roll  = imu.phi   + config.rollOffset
-        let yaw   = imu.psi   + config.yawOffset
+        let pitchDeg = imu.theta + config.pitchOffset
+        let rollDeg  = imu.phi   + config.rollOffset
+        let yawDeg   = imu.psi   + config.yawOffset
 
-        guard pitch.isFinite && roll.isFinite && yaw.isFinite else { return }
+        guard pitchDeg.isFinite && rollDeg.isFinite && yawDeg.isFinite else { return }
+
+        let pitch = pitchDeg * .pi / 180
+        let roll  = rollDeg  * .pi / 180
+        let yaw   = yawDeg   * .pi / 180
 
         // Compose intrinsic YXZ (yaw applied first, then pitch, then roll)
         let qYaw   = simd_quatf(angle: yaw,   axis: SIMD3(0, 1, 0))
@@ -286,7 +276,7 @@ struct AngleRow: View {
         HStack {
             Text(label).font(.caption).foregroundColor(.secondary)
                 .frame(maxWidth: .infinity, alignment: .leading)
-            Text(String(format: "%.1f°", value * 180 / .pi))
+            Text(String(format: "%.1f°", value))
                 .font(.subheadline.monospacedDigit())
                 .fontWeight(.bold)
                 .foregroundColor(color)
@@ -303,7 +293,7 @@ struct RateLabel: View {
         HStack {
             Text(title).font(.subheadline)
             Spacer()
-            Text(String(format: "%.3f rad/s", value))
+            Text(String(format: "%.1f°/s", value))
                 .font(.subheadline.monospacedDigit()).fontWeight(.semibold)
         }
     }

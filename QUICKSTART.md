@@ -1,4 +1,4 @@
-# iPhone App - Quick Start
+# BBotTuneHUD - Quick Start
 
 ## 5-Minute Setup
 
@@ -7,17 +7,17 @@
 ```
 Xcode → New → Project
   Template: iOS App
-  Name: CatFollowerApp
+  Name: BBotTuneHUD
   Interface: SwiftUI
   Language: Swift
 ```
 
 ### 2. Create Folders (30 sec)
 
-Right-click `CatFollowerApp` folder, create groups:
+Right-click `BBotTuneHUD` folder, create groups:
 - Models
 - Views
-- ViewModels  
+- ViewModels
 - Services
 
 ### 3. Add Files (2 min)
@@ -33,18 +33,19 @@ Copy-paste these files into respective folders:
 
 **Services/**
 - WebSocketService.swift
+- AppLogger.swift
 
 **Views/**
 - ContentView.swift (replace existing)
 - ControlView.swift
 - PIDTuningView.swift
 - IMUVisualizationView.swift
+- XboxStatusView.swift
 - DebugView.swift
 - SettingsView.swift
 
 **Root/**
-- Info.plist (replace existing)
-- CatFollowerApp.swift (already exists, verify)
+- BBotTuneHUD.swift (already exists, verify)
 
 ### 4. Build & Run (30 sec)
 
@@ -53,76 +54,88 @@ Copy-paste these files into respective folders:
 ⌘R (Run)
 ```
 
+---
+
 ## First Run
 
-1. App launches → Go to **Settings** tab
-2. Enter IPs:
-   - BeagleBone: `192.168.1.100`
-   - RPi5: `192.168.1.139`
+1. App launches → go to **Settings** tab
+2. Enter BeagleBone IP: `192.168.1.100`
 3. Tap **Reconnect**
-4. Go to **Control** tab
-5. You should see:
+4. Go to **Control** tab — you should see:
    - ✅ "Connected" indicator
-   - ✅ Video stream
-   - ✅ Live telemetry
+   - ✅ Live telemetry (battery, loop Hz, armed state)
+
+---
 
 ## Testing
 
-### Test ARM/DISARM
-1. Place robot on floor
-2. Tap **ARM** button (green)
-3. Robot should try to balance
-4. Tap **DISARM** (red) to stop
+### Arm / Disarm
+1. Place robot upright on floor
+2. Tap **ARM** — rejected if lean angle > ~14°
+3. Robot attempts to balance
+4. Tap **DISARM** to stop motors
 
-### Test PID Tuning
+> No RC controller needed — the app provides full arm/disarm control.
+
+### PID Tuning
 1. Go to **PID Tuning** tab
-2. Select "D1: Balance"
-3. Adjust Kp slider
-4. See "Live Status" update
-5. Robot behavior changes in real-time
+2. Select controller (D1: Balance, D3: Steering)
+3. Adjust Kp/Ki/Kd sliders
+4. Tap **Send** — gains update on robot immediately, no restart needed
 
-### Test 3D Visualization
-1. Go to **3D IMU** tab
-2. Tilt robot
-3. 3D model should tilt in sync
-4. Drag to rotate view
+### 3D IMU Visualization
+1. Go to **IMU** tab
+2. Tilt robot — 3D model tracks in sync
+3. Tap **Zero display** to set current angles as level reference
+4. Drag to orbit the view
 
-### Test Cat Following
+### Debug Console
+1. Go to **Debug** tab
+2. Live color-coded log of all WebSocket events
+3. Tap trash icon to clear
+4. Toggle autoscroll as needed
+
+### Object Tracking Mode
 1. Go to **Control** tab
-2. Select mode: **Follow Cat**
-3. Place cat in view of camera
-4. Should see "Cat Detected" status
-5. Robot should track cat
+2. Select mode: **Follow**
+3. Robot accepts position commands from external vision system over UART
+4. Status shows tracking state
+
+---
 
 ## Troubleshooting
 
 **No connection:**
 ```
-Settings → Check IPs → Tap Reconnect
+Settings → Check BeagleBone IP → Tap Reconnect
 ```
 
-**No video:**
-```
-Settings → Check RPi5 IP
-Safari: http://192.168.1.139:5000
+**Check balance_bot services on BeagleBone:**
+```bash
+systemctl status balance_bot
+systemctl status balance_bot_server
 ```
 
 **Build errors:**
 ```
-Clean: ⇧⌘K
-Build: ⌘B
+Clean:  ⇧⌘K
+Build:  ⌘B
 ```
+
+**Too many apps on device (free developer account):**
+```
+Delete an old app from iPhone, then re-run
+```
+
+---
 
 ## Done! 🎉
 
-Your iPhone app is complete and working!
-
 **Features:**
-- ✅ Real-time video
 - ✅ Live telemetry
 - ✅ PID tuning
-- ✅ 3D visualization
-- ✅ Cat tracking
+- ✅ 3D IMU visualization
 - ✅ Debug console
-
-**Total setup time:** ~5 minutes
+- ✅ Arm / Disarm
+- ✅ Object tracking mode
+- ✅ Auto-reconnect

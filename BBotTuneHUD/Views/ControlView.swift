@@ -19,14 +19,14 @@ struct ControlView: View {
                     HStack(spacing: 15) {
                         StatusCard(
                             title: "Battery",
-                            value: String(format: "%.1fV", viewModel.robotState.battery),
-                            color: viewModel.batteryColor
+                            value: viewModel.battLabel,
+                            color: viewModel.battColor
                         )
                         
                         StatusCard(
                             title: "Angle",
-                            value: String(format: "%.1f°", viewModel.robotState.imu.theta * 180 / .pi),
-                            color: .blue
+                            value: String(format: "%.1f°", viewModel.robotState.imu.theta),
+                            color: abs(viewModel.robotState.imu.theta) < 14 ? .green : .red
                         )
                         
                         StatusCard(
@@ -37,22 +37,41 @@ struct ControlView: View {
                     }
                     .padding(.horizontal)
                     
-                    // Arm/Disarm Button
-                    Button(action: {
-                        viewModel.setArmed(!viewModel.robotState.armed)
-                    }) {
-                        HStack {
-                            Image(systemName: viewModel.robotState.armed ? "stop.circle.fill" : "play.circle.fill")
-                                .font(.system(size: 30))
-                            Text(viewModel.robotState.armed ? "DISARM" : "ARM")
-                                .font(.title2)
-                                .fontWeight(.bold)
+                    // Arm/Disarm + Zero IMU
+                    HStack(spacing: 12) {
+                        Button(action: {
+                            viewModel.setArmed(!viewModel.robotState.armed)
+                        }) {
+                            HStack {
+                                Image(systemName: viewModel.robotState.armed ? "stop.circle.fill" : "play.circle.fill")
+                                    .font(.system(size: 30))
+                                Text(viewModel.robotState.armed ? "DISARM" : "ARM")
+                                    .font(.title2)
+                                    .fontWeight(.bold)
+                            }
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 60)
+                            .background(viewModel.robotState.armed ? Color.red : Color.green)
+                            .cornerRadius(12)
                         }
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 60)
-                        .background(viewModel.robotState.armed ? Color.red : Color.green)
-                        .cornerRadius(12)
+
+                        Button(action: {
+                            viewModel.zeroIMUDisplay()
+                        }) {
+                            VStack(spacing: 2) {
+                                Image(systemName: "scope")
+                                    .font(.system(size: 22))
+                                Text("ZERO")
+                                    .font(.caption)
+                                    .fontWeight(.bold)
+                            }
+                            .foregroundColor(.white)
+                            .frame(width: 70)
+                            .frame(height: 60)
+                            .background(Color.indigo)
+                            .cornerRadius(12)
+                        }
                     }
                     .padding(.horizontal)
                     
@@ -67,7 +86,7 @@ struct ControlView: View {
                             set: { viewModel.setMode($0) }
                         )) {
                             Text("Balance").tag(RobotMode.balance)
-                            Text("Follow Cat").tag(RobotMode.followCat)
+                            Text("Ext Control").tag(RobotMode.extInput)
                             Text("Manual").tag(RobotMode.manual)
                         }
                         .pickerStyle(SegmentedPickerStyle())

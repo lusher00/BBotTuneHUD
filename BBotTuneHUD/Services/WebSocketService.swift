@@ -164,9 +164,19 @@ class WebSocketService: ObservableObject {
         sendCommand(["type": "set_controller", "controller": name, "enabled": enabled])
     }
 
+    func savePID() {
+        AppLogger.log("💾 Saving PID config to robot")
+        sendCommand(["type": "save_pid"])
+    }
+
     func setPID(controller: String, kp: Float, ki: Float, kd: Float) {
         AppLogger.log("🔧 setPID \(controller)  Kp=\(kp) Ki=\(ki) Kd=\(kd)")
         sendCommand(["type": "set_pid", "controller": controller, "kp": kp, "ki": ki, "kd": kd])
+    }
+
+    func zeroIMU() {
+        AppLogger.log("🎯 Zeroing IMU")
+        sendCommand(["type": "zero_imu"])
     }
 
     func setArmed(_ armed: Bool) {

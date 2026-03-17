@@ -6,6 +6,9 @@ struct RobotState: Codable {
     var armed: Bool = false
     var mode: RobotMode = .balance
     var loopHz: Float = 0.0
+    var thetaOffset: Float = 0.0
+    var battVoltage: Float? = nil
+    var battStatus: Int? = nil
     
     var imu: IMUData = IMUData()
     var encoders: EncoderData?
@@ -29,10 +32,10 @@ struct RobotState: Codable {
 }
 
 enum RobotMode: Int, Codable {
-    case idle = 0
-    case balance = 1
-    case followCat = 2
-    case manual = 3
+    case idle     = 0
+    case balance  = 1
+    case extInput = 2
+    case manual   = 3
 }
 
 /// IMU attitude data
@@ -104,21 +107,23 @@ struct IMUData: Codable {
 }
 
 /// Encoder data
+/// NOTE: JSON keys are "left_rad"/"right_rad"/"left_vel"/"right_vel" (legacy names),
+/// but firmware now sends degrees and deg/s — Swift names reflect the true units.
 struct EncoderData: Codable {
     var leftTicks: Int = 0
     var rightTicks: Int = 0
-    var leftRad: Float = 0.0
-    var rightRad: Float = 0.0
-    var leftVel: Float = 0.0
-    var rightVel: Float = 0.0
-    
+    var leftDeg: Float = 0.0
+    var rightDeg: Float = 0.0
+    var leftDegPerSec: Float = 0.0
+    var rightDegPerSec: Float = 0.0
+
     enum CodingKeys: String, CodingKey {
         case leftTicks = "left_ticks"
         case rightTicks = "right_ticks"
-        case leftRad = "left_rad"
-        case rightRad = "right_rad"
-        case leftVel = "left_vel"
-        case rightVel = "right_vel"
+        case leftDeg = "left_rad"        // firmware key kept for wire compat
+        case rightDeg = "right_rad"
+        case leftDegPerSec = "left_vel"
+        case rightDegPerSec = "right_vel"
     }
 }
 
@@ -187,9 +192,15 @@ struct SystemData: Codable {
     var armed: Bool
     var mode: Int
     var loopHz: Float
-    
+    var thetaOffset: Float = 0.0
+    var battVoltage: Float?
+    var battStatus: Int?
+
     enum CodingKeys: String, CodingKey {
         case battery, armed, mode
-        case loopHz = "loop_hz"
+        case loopHz      = "loop_hz"
+        case thetaOffset = "theta_offset"
+        case battVoltage = "batt_voltage"
+        case battStatus  = "batt_status"
     }
 }

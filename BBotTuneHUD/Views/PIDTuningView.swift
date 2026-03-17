@@ -46,6 +46,13 @@ struct PIDTuningView: View {
             }
             .navigationTitle("⚙️ PID Tuning")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: { viewModel.savePID() }) {
+                        Label("Save", systemImage: "square.and.arrow.down")
+                    }
+                }
+            }
         }
     }
 }

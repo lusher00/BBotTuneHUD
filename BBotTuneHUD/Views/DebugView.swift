@@ -98,15 +98,15 @@ struct DebugView: View {
 
                     Section(header: Text("IMU Visualization")) {
                         LabeledRow("θ pitch") {
-                            Text(String(format: "%.1f°", viewModel.robotState.imu.theta * 180 / .pi))
+                            Text(String(format: "%.1f°", viewModel.robotState.imu.theta))
                                 .fontWeight(.semibold).foregroundColor(.red)
                         }
                         LabeledRow("φ roll") {
-                            Text(String(format: "%.1f°", viewModel.robotState.imu.phi * 180 / .pi))
+                            Text(String(format: "%.1f°", viewModel.robotState.imu.phi))
                                 .fontWeight(.semibold).foregroundColor(.green)
                         }
                         LabeledRow("ψ yaw") {
-                            Text(String(format: "%.1f°", viewModel.robotState.imu.psi * 180 / .pi))
+                            Text(String(format: "%.1f°", viewModel.robotState.imu.psi))
                                 .fontWeight(.semibold).foregroundColor(.blue)
                         }
                         Button {
@@ -120,9 +120,9 @@ struct DebugView: View {
                     if let encoders = viewModel.robotState.encoders {
                         Section(header: Text("Encoders")) {
                             HStack {
-                                EncoderColumn(side: "Left",  ticks: encoders.leftTicks,  rad: encoders.leftRad,  vel: encoders.leftVel)
+                                EncoderColumn(side: "Left",  ticks: encoders.leftTicks,  deg: encoders.leftDeg,  vel: encoders.leftDegPerSec)
                                 Spacer()
-                                EncoderColumn(side: "Right", ticks: encoders.rightTicks, rad: encoders.rightRad, vel: encoders.rightVel)
+                                EncoderColumn(side: "Right", ticks: encoders.rightTicks, deg: encoders.rightDeg, vel: encoders.rightDegPerSec)
                             }
                         }
                     }
@@ -194,15 +194,15 @@ struct LabeledRow<Content: View>: View {
 struct EncoderColumn: View {
     let side: String
     let ticks: Int
-    let rad: Float
+    let deg: Float
     let vel: Float
 
     var body: some View {
         VStack(alignment: .leading, spacing: 2) {
             Text(side).font(.caption).foregroundColor(.secondary)
             Text("\(ticks) ticks")
-            Text(String(format: "%.2f rad", rad)).font(.caption)
-            Text(String(format: "%.2f rad/s", vel)).font(.caption)
+            Text(String(format: "%.1f°", deg)).font(.caption)
+            Text(String(format: "%.1f°/s", vel)).font(.caption)
         }
     }
 }

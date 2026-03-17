@@ -79,6 +79,10 @@ class RobotViewModel: ObservableObject {
         webSocket.setMode(mode.rawValue)
     }
 
+    func savePID() {
+        webSocket.savePID()
+    }
+
     func updatePID(_ controller: String, kp: Float, ki: Float, kd: Float) {
         webSocket.setPID(controller: controller, kp: kp, ki: ki, kd: kd)
         switch controller {
@@ -115,23 +119,21 @@ class RobotViewModel: ObservableObject {
     /// Zero all three IMU display offsets using the robot's current resting angles.
     /// Tap this when the robot is sitting balanced/upright.
     func zeroIMUDisplay() {
-        imuDisplayConfig.pitchOffset = -robotState.imu.theta
-        imuDisplayConfig.rollOffset  = -robotState.imu.phi
-        imuDisplayConfig.yawOffset   = -robotState.imu.psi
-        AppLogger.log(String(format: "🎯 IMU zeroed — offsets: pitch=%.2f° roll=%.2f° yaw=%.2f°",
-            imuDisplayConfig.pitchOffset * 180 / .pi,
-            imuDisplayConfig.rollOffset  * 180 / .pi,
-            imuDisplayConfig.yawOffset   * 180 / .pi))
+        webSocket.zeroIMU()
+        AppLogger.log("🎯 IMU zero command sent to robot")
     }
 
     private func updateRobotState(from telemetry: TelemetryMessage) {
         packetsReceived += 1
 
         if let system = telemetry.system {
-            robotState.battery = system.battery
-            robotState.armed   = system.armed
-            robotState.mode    = RobotMode(rawValue: system.mode) ?? .balance
-            robotState.loopHz  = system.loopHz
+            robotState.battery     = system.battery
+            robotState.armed       = system.armed
+            robotState.mode        = RobotMode(rawValue: system.mode) ?? .balance
+            robotState.loopHz      = system.loopHz
+            robotState.thetaOffset = system.thetaOffset
+            robotState.battVoltage = system.battVoltage
+            robotState.battStatus  = system.battStatus
         }
         if let imu      = telemetry.imu        { robotState.imu      = imu      }
         if let encoders = telemetry.encoders   { robotState.encoders = encoders }
@@ -152,12 +154,26 @@ class RobotViewModel: ObservableObject {
         return .red
     }
 
+    var battColor: Color {
+        switch robotState.battStatus {
+        case 1: return .green
+        case 2: return .yellow
+        case 3: return .red
+        default: return .gray
+        }
+    }
+
+    var battLabel: String {
+        guard let v = robotState.battVoltage, v >= 0 else { return "–" }
+        return String(format: "%.2fV", v)
+    }
+
     var modeName: String {
         switch robotState.mode {
-        case .idle:      return "Idle"
-        case .balance:   return "Balance"
-        case .followCat: return "Follow Cat"
-        case .manual:    return "Manual"
+        case .idle:     return "Idle"
+        case .balance:  return "Balance"
+        case .extInput: return "Ext Control"
+        case .manual:   return "Manual"
         }
     }
 

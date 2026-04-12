@@ -102,7 +102,11 @@ class WebSocketService: ObservableObject {
 
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: command)
-            webSocket.send(.data(jsonData)) { [weak self] error in
+            guard let jsonString = String(data: jsonData, encoding: .utf8) else {
+                AppLogger.log("❌ JSON string encode error")
+                return
+            }
+            webSocket.send(.string(jsonString)) { [weak self] error in
                 if let error = error {
                     AppLogger.log("❌ Send error: \(error.localizedDescription)")
                     DispatchQueue.main.async { self?.lastError = error.localizedDescription }
@@ -127,14 +131,19 @@ class WebSocketService: ObservableObject {
     }
 
     private func handleData(_ data: Data) {
+        // Peek at "type" before full decode — discard ack/status messages silently
+        if let obj = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
+            guard let type = obj["type"] as? String else { return }
+            guard type == "telemetry" else { return }
+        } else {
+            return
+        }
         do {
             let telemetry = try JSONDecoder().decode(TelemetryMessage.self, from: data)
-            guard telemetry.type == "telemetry" else { return }
             DispatchQueue.main.async {
                 self.onTelemetryReceived?(telemetry)
             }
         } catch {
-            // Log the raw string for debugging when decode fails
             let preview = String(data: data.prefix(200), encoding: .utf8) ?? "<binary>"
             AppLogger.log("❌ JSON decode error: \(error)\n   raw: \(preview)")
         }
@@ -188,7 +197,11 @@ class WebSocketService: ObservableObject {
         AppLogger.log("🤖 setMode → \(mode)")
         sendCommand(["type": "set_mode", "value": mode])
     }
-
+    
+    func forceStop() {
+        sendCommand(["type": "e_stop"])
+    }
+    
     func setTelemetry(encoders: Bool? = nil, imuFull: Bool? = nil, pidStates: Bool? = nil) {
         var command: [String: Any] = ["type": "set_telemetry"]
         if let v = encoders  { command["encoders"]   = v }
@@ -196,5 +209,26 @@ class WebSocketService: ObservableObject {
         if let v = pidStates { command["pid_states"] = v }
         AppLogger.log("📡 setTelemetry \(command.filter { $0.key != "type" })")
         sendCommand(command)
+    }
+
+    func setPosConfig(_ cfg: PosConfig) {
+        AppLogger.log("📐 setPosConfig zones=\(cfg.zoneA)/\(cfg.zoneB)/\(cfg.zoneC)")
+        sendCommand([
+            "type":              "set_pos_config",
+            "zone_a":            cfg.zoneA,
+            "zone_b":            cfg.zoneB,
+            "zone_c":            cfg.zoneC,
+            "scale_a":           cfg.scaleA,
+            "scale_b":           cfg.scaleB,
+            "scale_c":           cfg.scaleC,
+            "scale_d":           cfg.scaleD,
+            "vel_scale_stop":    cfg.velScaleStop,
+            "vel_scale_move":    cfg.velScaleMove,
+            "vel_scale_turning": cfg.velScaleTurning,
+            "stopped_vel":       cfg.stoppedVel,
+            "max_correction":    cfg.maxCorrection,
+            "max_angle_rate":    cfg.maxAngleRate,
+            "back_to_spot":      cfg.backToSpot,
+        ])
     }
 }

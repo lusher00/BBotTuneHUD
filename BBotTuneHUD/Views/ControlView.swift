@@ -1,4 +1,5 @@
 import SwiftUI
+import WebKit
 
 struct ControlView: View {
     @ObservedObject var viewModel: RobotViewModel
@@ -26,7 +27,8 @@ struct ControlView: View {
                         StatusCard(
                             title: "Angle",
                             value: String(format: "%.1f°", viewModel.robotState.imu.theta),
-                            color: abs(viewModel.robotState.imu.theta) < 14 ? .green : .red
+                            color: abs(viewModel.robotState.imu.theta) < 5 ? .green :
+                                   abs(viewModel.robotState.imu.theta) < 14 ? .yellow : .red
                         )
                         
                         StatusCard(
@@ -114,6 +116,32 @@ struct ControlView: View {
     }
 }
 
+// MARK: - Video Player (WKWebView — handles MJPEG multipart/x-mixed-replace)
+
+struct VideoPlayerView: UIViewRepresentable {
+    let url: URL?
+
+    func makeUIView(context: Context) -> WKWebView {
+        let config = WKWebViewConfiguration()
+        let webView = WKWebView(frame: .zero, configuration: config)
+        webView.backgroundColor = .black
+        webView.isOpaque = false
+        webView.scrollView.isScrollEnabled = false
+        webView.scrollView.bounces = false
+        return webView
+    }
+
+    func updateUIView(_ webView: WKWebView, context: Context) {
+        guard let url = url else { return }
+        // Only reload if the URL actually changed
+        if webView.url != url {
+            webView.load(URLRequest(url: url))
+        }
+    }
+}
+
+// MARK: - Supporting Views
+
 struct StatusCard: View {
     let title: String
     let value: String
@@ -181,17 +209,14 @@ struct CatOverlayView: View {
     var body: some View {
         GeometryReader { geometry in
             if let cat = cat, cat.detected {
-                // Calculate cat position on screen
                 let centerX = geometry.size.width / 2 + CGFloat(cat.x) * geometry.size.width / 2
                 let centerY = geometry.size.height / 2 + CGFloat(cat.y) * geometry.size.height / 2
                 
-                // Bounding box
                 Rectangle()
                     .stroke(Color.green, lineWidth: 2)
                     .frame(width: 100, height: 100)
                     .position(x: centerX, y: centerY)
                 
-                // Crosshair
                 Path { path in
                     path.move(to: CGPoint(x: centerX - 10, y: centerY))
                     path.addLine(to: CGPoint(x: centerX + 10, y: centerY))
@@ -200,41 +225,6 @@ struct CatOverlayView: View {
                 }
                 .stroke(Color.green, lineWidth: 2)
             }
-        }
-    }
-}
-
-struct VideoPlayerView: View {
-    let url: URL?
-    
-    var body: some View {
-        if let url = url {
-            AsyncImage(url: url) { phase in
-                switch phase {
-                case .empty:
-                    ProgressView()
-                case .success(let image):
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                case .failure:
-                    VStack {
-                        Image(systemName: "video.slash")
-                            .font(.largeTitle)
-                        Text("Video unavailable")
-                            .font(.caption)
-                    }
-                @unknown default:
-                    EmptyView()
-                }
-            }
-        } else {
-            Rectangle()
-                .fill(Color.black)
-                .overlay(
-                    Text("No video source")
-                        .foregroundColor(.white)
-                )
         }
     }
 }

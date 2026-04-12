@@ -6,7 +6,6 @@ struct RobotState: Codable {
     var armed: Bool = false
     var mode: RobotMode = .balance
     var loopHz: Float = 0.0
-    var thetaOffset: Float = 0.0
     var battVoltage: Float? = nil
     var battStatus: Int? = nil
     
@@ -138,19 +137,23 @@ struct CatData: Codable {
 /// PID controller state
 struct PIDState: Codable {
     var enabled: Bool = false
-    var setpoint: Float = 0.0  // Make optional
+    var setpoint: Float = 0.0
     var measurement: Float? = nil
     var error: Float = 0.0
     var pTerm: Float?
     var iTerm: Float?
     var dTerm: Float?
     var output: Float = 0.0
-    
+    var kp: Float? = nil
+    var ki: Float? = nil
+    var kd: Float? = nil
+
     enum CodingKeys: String, CodingKey {
         case enabled, setpoint, measurement, error, output
         case pTerm = "p_term"
         case iTerm = "i_term"
         case dTerm = "d_term"
+        case kp, ki, kd
     }
 }
 
@@ -177,12 +180,14 @@ struct TelemetryMessage: Codable {
     var d2Drive: PIDState?
     var d3Steering: PIDState?
     var motors: MotorData?
-    
+    var posConfig: PosConfig?
+
     enum CodingKeys: String, CodingKey {
         case type, timestamp, system, imu, encoders, cat, motors
-        case d1Balance = "D1_balance"
-        case d2Drive = "D2_drive"
+        case d1Balance  = "D1_balance"
+        case d2Drive    = "D2_drive"
         case d3Steering = "D3_steering"
+        case posConfig  = "pos_config"
     }
 }
 
@@ -192,14 +197,12 @@ struct SystemData: Codable {
     var armed: Bool
     var mode: Int
     var loopHz: Float
-    var thetaOffset: Float = 0.0
     var battVoltage: Float?
     var battStatus: Int?
 
     enum CodingKeys: String, CodingKey {
         case battery, armed, mode
         case loopHz      = "loop_hz"
-        case thetaOffset = "theta_offset"
         case battVoltage = "batt_voltage"
         case battStatus  = "batt_status"
     }

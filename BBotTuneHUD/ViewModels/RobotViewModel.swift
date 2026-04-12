@@ -8,7 +8,13 @@ class RobotViewModel: ObservableObject {
     @Published var connectionError: String?
 
     @Published var pidConfig = RobotPIDConfig()
+    @Published var posConfig = PosConfig()
     @Published var imuDisplayConfig = IMUDisplayConfig()
+    @Published var gainsReceived = false
+    @Published var posConfigReceived = false
+    private var d1GainsReceived = false
+    private var d2GainsReceived = false
+    private var d3GainsReceived = false
 
     @Published var beagleboneIP = "192.168.1.140"
     @Published var rpi5IP = "192.168.1.126"
@@ -30,8 +36,17 @@ class RobotViewModel: ObservableObject {
         webSocket.$isConnected
             .receive(on: DispatchQueue.main)
             .sink { [weak self] connected in
-                self?.isConnected = connected
+                guard let self else { return }
+                self.isConnected = connected
                 AppLogger.log(connected ? "✅ WebSocket connected" : "🔴 WebSocket disconnected")
+                if connected {
+                    if !self.gainsReceived {
+                        self.d1GainsReceived   = false
+                        self.d2GainsReceived   = false
+                        self.d3GainsReceived   = false
+                        self.posConfigReceived = false
+                    }
+                }
             }
             .store(in: &cancellables)
 
@@ -74,6 +89,11 @@ class RobotViewModel: ObservableObject {
         webSocket.setArmed(armed)
     }
 
+    func forceStop() {
+        robotState.armed = false
+        webSocket.forceStop()
+    }
+    
     func setMode(_ mode: RobotMode) {
         robotState.mode = mode
         webSocket.setMode(mode.rawValue)
@@ -81,6 +101,25 @@ class RobotViewModel: ObservableObject {
 
     func savePID() {
         webSocket.savePID()
+    }
+
+    func refreshGains() {
+        gainsReceived     = false
+        d1GainsReceived   = false
+        d2GainsReceived   = false
+        d3GainsReceived   = false
+        posConfigReceived = false
+        // Request an immediate config snapshot from the bot
+        webSocket.sendCommand(["type": "get_config"])
+    }
+
+    func setPosConfig(_ cfg: PosConfig) {
+        guard posConfigReceived else {
+            AppLogger.log("⚠️ setPosConfig blocked — pos_config not yet received from bot")
+            return
+        }
+        posConfig = cfg
+        webSocket.setPosConfig(cfg)
     }
 
     func updatePID(_ controller: String, kp: Float, ki: Float, kd: Float) {
@@ -123,6 +162,11 @@ class RobotViewModel: ObservableObject {
         AppLogger.log("🎯 IMU zero command sent to robot")
     }
 
+    func zeroEncoders() {
+        webSocket.sendCommand(["type": "zero_encoders"])
+        AppLogger.log("🔄 Encoders zeroed")
+    }
+
     private func updateRobotState(from telemetry: TelemetryMessage) {
         packetsReceived += 1
 
@@ -131,21 +175,56 @@ class RobotViewModel: ObservableObject {
             robotState.armed       = system.armed
             robotState.mode        = RobotMode(rawValue: system.mode) ?? .balance
             robotState.loopHz      = system.loopHz
-            robotState.thetaOffset = system.thetaOffset
             robotState.battVoltage = system.battVoltage
             robotState.battStatus  = system.battStatus
         }
         if let imu      = telemetry.imu        { robotState.imu      = imu      }
         if let encoders = telemetry.encoders   { robotState.encoders = encoders }
         if let cat      = telemetry.cat        { robotState.cat      = cat      }
-        if let d1       = telemetry.d1Balance  { robotState.d1Balance  = d1 }
-        if let d2       = telemetry.d2Drive    { robotState.d2Drive    = d2 }
-        if let d3       = telemetry.d3Steering { robotState.d3Steering = d3 }
+        if let d1 = telemetry.d1Balance  {
+            robotState.d1Balance = d1
+            pidConfig.d1Balance.enabled = d1.enabled
+            if !d1GainsReceived, let kp = d1.kp, let ki = d1.ki, let kd = d1.kd {
+                pidConfig.d1Balance.kp = kp
+                pidConfig.d1Balance.ki = ki
+                pidConfig.d1Balance.kd = kd
+                d1GainsReceived = true
+                gainsReceived   = true
+            }
+        }
+        if let d2 = telemetry.d2Drive {
+            robotState.d2Drive = d2
+            pidConfig.d2Drive.enabled = d2.enabled
+            if !d2GainsReceived, let kp = d2.kp, let ki = d2.ki, let kd = d2.kd {
+                pidConfig.d2Drive.kp = kp
+                pidConfig.d2Drive.ki = ki
+                pidConfig.d2Drive.kd = kd
+                d2GainsReceived = true
+                gainsReceived   = true
+            }
+        }
+        if let d3 = telemetry.d3Steering {
+            robotState.d3Steering = d3
+            pidConfig.d3Steering.enabled = d3.enabled
+            if !d3GainsReceived, let kp = d3.kp, let ki = d3.ki, let kd = d3.kd {
+                pidConfig.d3Steering.kp = kp
+                pidConfig.d3Steering.ki = ki
+                pidConfig.d3Steering.kd = kd
+                d3GainsReceived = true
+                gainsReceived   = true
+            }
+        }
         if let motors   = telemetry.motors     { robotState.motors   = motors   }
+        if let pc = telemetry.posConfig, !posConfigReceived {
+            posConfig = pc
+            posConfigReceived = true
+            AppLogger.log("📐 posConfig latched: scaleD=\(pc.scaleD) maxCorr=\(pc.maxCorrection) stoppedVel=\(pc.stoppedVel)")
+        }
     }
 
+    // Fixed: correct port (8080) and path (/video) to match Flask server
     var videoURL: URL? {
-        URL(string: "http://\(rpi5IP):5000/video_feed")
+        URL(string: "http://\(rpi5IP):8080/video")
     }
 
     var batteryColor: Color {
